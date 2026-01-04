@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX HUB | Premium Roblox Scripts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: rgba(20, 20, 35, 0.7);
+            --neon-purple: #a855f7;
+            --neon-cyan: #22d3ee;
+            --neon-blue: #3b82f6;
+            --neon-red: #ef4444;
+            --neon-green: #22c55e;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            background: var(--neon-purple);
+            top: -200px;
+            left: -200px;
+        }
+
+        .orb-2 {
+            background: var(--neon-cyan);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid var(--neon-purple);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--neon-purple);
+            margin-bottom: 2rem;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.6); }
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, var(--neon-purple) 50%, var(--neon-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: text-shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes text-shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+            color: white;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(34, 211, 238, 0.1);
+            box-shadow: 0 0 30px rgba(34, 211, 238, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(168, 85, 247, 0.05));
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.2);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon.purple { background: rgba(168, 85, 247, 0.2); }
+        .feature-icon.cyan { background: rgba(34, 211, 238, 0.2); }
+        .feature-icon.blue { background: rgba(59, 130, 246, 0.2); }
+        .feature-icon.green { background: rgba(34, 197, 94, 0.2); }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Scripts Section */
+        .scripts-section {
+            padding: 6rem 2rem;
+        }
+
+        .scripts-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .scripts-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .tags-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .tag-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag-btn:hover, .tag-btn.active {
+            background: var(--neon-purple);
+            color: white;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .script-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 15px 40px rgba(34, 211, 238, 0.2);
+        }
+
+        .script-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .script-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .script-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-new {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        .badge-hot {
+            background: var(--neon-red);
+            color: white;
+        }
+
+        .badge-verified {
+            background: var(--neon-blue);
+            color: white;
+        }
+
+        .script-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .script-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .script-tag {
+            padding: 0.3rem 0.7rem;
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--neon-purple);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.1));
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--neon-red);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 150px);
+        }
+
+        .code-container {
+            background: #0d0d12;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca40; }
+
+        .code-content {
+            padding: 1.5rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Admin Panel */
+        .admin-section {
+            padding: 6rem 2rem;
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-form {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            font-family: 'Consolas', monospace;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input {
+            width: auto;
+        }
+
+        .password-gate {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .password-gate input {
+            max-width: 300px;
+            margin: 1rem auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-cyan);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: var(--neon-green);
+            color: #000;
+            border-radius: 10px;
+            font-weight: 700;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 3000;
+        }
+
+        .toast.active {
+            transform: translateX(0);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 4px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .scripts-header {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Particles animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            animation: rise 10s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Admin Scripts List */
+        .admin-scripts-list {
+            margin-top: 2rem;
+        }
+
+        .admin-script-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+        }
+
+        .admin-script-item button {
+            padding: 0.5rem 1rem;
+            background: var(--neon-red);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-script-item button:hover {
+            background: #dc2626;
+        }
+
+        /* Executors Section */
+        .executors-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, rgba(34, 211, 238, 0.03), transparent);
+        }
+
+        .executors-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .executor-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .executor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .executor-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 25px 50px rgba(34, 211, 238, 0.25);
+        }
+
+        .executor-card:hover::before {
+            opacity: 1;
+        }
+
+        .executor-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 40px rgba(34, 211, 238, 0.3);
+            animation: icon-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes icon-pulse {
+            0%, 100% { box-shadow: 0 10px 40px rgba(34, 211, 238, 0.3); }
+            50% { box-shadow: 0 10px 60px rgba(34, 211, 238, 0.5); }
+        }
+
+        .executor-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .executor-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--neon-green);
+            color: #000;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .executor-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .executor-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .executor-feature {
+            padding: 0.4rem 0.8rem;
+            background: rgba(34, 211, 238, 0.15);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--neon-cyan);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 30px rgba(34, 211, 238, 0.4);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 50px rgba(34, 211, 238, 0.6);
+        }
+
+        .executor-warning {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--neon-red);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VORTEX HUB</div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#executors">Executors</a></li>
+                <li><a href="#scripts">Scripts</a></li>
+                <li><a href="#admin" onclick="showAdminGate()">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div class="hero-badge">⚡ #1 Script Hub in 2024</div>
+                <h1>THE ULTIMATE ROBLOX SCRIPT HUB</h1>
+                <p>Premium scripts. Zero paywalls. Instant access to the most powerful scripts in the Roblox exploiting community. Join thousands of players dominating every game.</p>
+                <div class="hero-buttons">
+                    <a href="#scripts" class="btn btn-primary">🚀 Browse Scripts</a>
+                    <a href="https://discord.gg" target="_blank" class="btn btn-secondary">💬 Join Discord</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">15K+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Scripts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="section-title">
+                <h2>WHY CHOOSE VORTEX HUB?</h2>
+                <p>The most trusted script hub in the community</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon purple">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Instantly load and execute scripts with zero lag. Optimized for performance on all devices.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cyan">🛡️</div>
+                    <h3>100% Clean Code</h3>
+                    <p>Every script is manually reviewed and verified. No malware, no backdoors, guaranteed.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue">🌐</div>
+                    <h3>Community Driven</h3>
+                    <p>Built by scripters, for scripters. Join our Discord for updates and requests.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green">🔓</div>
+                    <h3>No Fake Paywalls</h3>
+                    <p>All scripts are completely free. No key systems, no ads, no BS. Just pure scripts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Executors Section -->
+        <section class="executors-section" id="executors">
+            <div class="section-title">
+                <h2>🔧 ROBLOX EXECUTORS</h2>
+                <p>Download the best executors to run your scripts</p>
+            </div>
+            <div class="executors-grid">
+                <div class="executor-card">
+                    <div class="executor-icon">⚡</div>
+                    <h3>Delta Executor</h3>
+                    <span class="executor-badge">🔥 Recommended</span>
+                    <p>The most powerful and reliable Roblox executor. Fast injection, high script compatibility, and regular updates.</p>
+                    <div class="executor-features">
+                        <span class="executor-feature">✓ Level 8</span>
+                        <span class="executor-feature">✓ No Key</span>
+                        <span class="executor-feature">✓ Auto-Update</span>
+                        <span class="executor-feature">✓ Mobile Support</span>
+                        <span class="executor-feature">✓ UNC Support</span>
+                    </div>
+                    <a href="https://deltaexploits.gg/" target="_blank" class="btn-download">
+                        ⬇️ Download Delta
+                    </a>
+                    <div class="executor-warning">
+                        ⚠️ Disable antivirus before downloading. False positives are common with executors.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scripts Section -->
+        <section class="scripts-section" id="scripts">
+            <div class="scripts-container">
+                <div class="section-title">
+                    <h2>SCRIPT LIBRARY</h2>
+                    <p>Browse our collection of premium scripts</p>
+                </div>
+                <div class="scripts-header">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search scripts...">
+                    </div>
+                    <div class="tags-filter">
+                        <button class="tag-btn active" data-tag="all">All</button>
+                        <button class="tag-btn" data-tag="ESP">ESP</button>
+                        <button class="tag-btn" data-tag="Aimbot">Aimbot</button>
+                        <button class="tag-btn" data-tag="Admin">Admin</button>
+                        <button class="tag-btn" data-tag="Utility">Utility</button>
+                        <button class="tag-btn" data-tag="Fun">Fun</button>
+                    </div>
+                </div>
+                <div class="scripts-grid" id="scriptsGrid">
+                    <!-- Scripts will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section class="admin-section" id="admin">
+            <div class="admin-container">
+                <div class="password-gate" id="passwordGate">
+                    <h2>🔒 Admin Access Required</h2>
+                    <p>Enter the admin password to continue</p>
+                    <div class="form-group">
+                        <input type="password" id="adminPassword" placeholder="Enter password...">
+                    </div>
+                    <button class="btn btn-primary" onclick="checkAdminPassword()">Access Panel</button>
+                </div>
+                <div class="admin-form" id="adminPanel" style="display: none;">
+                    <div class="section-title">
+                        <h2>📤 Upload New Script</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Script Title</label>
+                        <input type="text" id="scriptTitle" placeholder="e.g., Universal ESP">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="scriptDesc" placeholder="Short description...">
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (select multiple)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item"><input type="checkbox" value="ESP"> ESP</label>
+                            <label class="checkbox-item"><input type="checkbox" value="Aimbot"> Aimbot</label>
+                            <label class="checkbox-item"><input type="checkbox" value="Admin"> Admin</label>
+                            <label class="checkbox-item"><input type="checkbox" value="Utility"> Utility</label>
+                            <label class="checkbox-item"><input type="checkbox" value="Fun"> Fun</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="scriptStatus">
+                            <option value="new">NEW</option>
+                            <option value="hot">HOT</option>
+                            <option value="verified">VERIFIED</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Script Code</label>
+                        <textarea id="scriptCode" placeholder="Paste your script code here..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="uploadScript()" style="width: 100%;">📤 Upload Script</button>
+                    
+                    <div class="admin-scripts-list" id="adminScriptsList">
+                        <h3 style="margin-bottom: 1rem; margin-top: 2rem;">Manage Scripts</h3>
+                        <!-- Admin script list will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Script Viewer Modal -->
+    <div class="modal-overlay" id="scriptModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Script Name</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="code-container">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span style="color: var(--text-secondary); font-size: 0.9rem;">script.lua</span>
+                    </div>
+                    <pre class="code-content" id="modalCode"></pre>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="copyScript()">📋 Copy Script</button>
+                    <button class="btn btn-secondary" onclick="downloadScript()">⬇️ Download .txt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">✓ Copied to clipboard!</div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">VORTEX HUB</div>
+            <p class="footer-text">The ultimate destination for Roblox scripts. Trusted by thousands of players worldwide.</p>
+            <div class="footer-links">
+                <a href="#">Discord</a>
+                <a href="#">YouTube</a>
+                <a href="#">Twitter</a>
+            </div>
+            <p style="color: var(--text-secondary); margin-top: 2rem; font-size: 0.9rem;">© 2024 Vortex Hub. For educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Default Scripts Data
+        const defaultScripts = [
+            {
+                id: 1,
+                title: "Universal ESP",
+                description: "Works on any game. See players through walls with customizable colors and distance.",
+                tags: ["ESP", "Utility"],
+                status: "hot",
+                code: `-- Universal ESP Script by Vortex Hub
+-- Works on all games
+
+local ESP = {}
+ESP.Enabled = true
+ESP.TeamCheck = false
+ESP.BoxColor = Color3.fromRGB(255, 0, 0)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+function ESP:CreateBox(player)
+    local box = Drawing.new("Square")
+    box.Visible = false
+    box.Color = self.BoxColor
+    box.Thickness = 1
+    box.Filled = false
+    return box
+end
+
+-- Initialize ESP for all players
+for _, player in pairs(Players:GetPlayers()) do
+    if player ~= LocalPlayer then
+        ESP:CreateBox(player)
+    end
+end
+
+print("[Vortex Hub] ESP Loaded Successfully!")`
+            },
+            {
+                id: 2,
+                title: "Silent Aimbot",
+                description: "Undetectable aimbot with smooth aim, FOV settings, and target prioritization.",
+                tags: ["Aimbot"],
+                status: "verified",
+                code: `-- Silent Aimbot by Vortex Hub
+-- Undetectable & Smooth
+
+local Aimbot = {
+    Enabled = true,
+    FOV = 120,
+    Smoothness = 0.5,
+    TargetPart = "Head",
+    TeamCheck = true,
+    VisibleCheck = true
+}
+
+local Camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+function Aimbot:GetClosestPlayer()
+    local closest = nil
+    local shortestDistance = self.FOV
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= Players.LocalPlayer then
+            local character = player.Character
+            if character and character:FindFirstChild(self.TargetPart) then
+                local screenPos = Camera:WorldToScreenPoint(character[self.TargetPart].Position)
+                local distance = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
+                if distance < shortestDistance then
+                    closest = player
+                    shortestDistance = distance
+                end
+            end
+        end
+    end
+    return closest
+end
+
+print("[Vortex Hub] Silent Aimbot Loaded!")`
+            },
+            {
+                id: 3,
+                title: "Infinite Yield Admin",
+                description: "Full-featured admin command suite with 200+ commands. Works on most games.",
+                tags: ["Admin", "Utility"],
+                status: "verified",
+                code: `-- Infinite Yield Admin Commands
+-- Loaded via Vortex Hub
+
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+
+-- Custom additions by Vortex Hub
+print("[Vortex Hub] Infinite Yield Loaded!")
+print("Type ;cmds for command list")`
+            },
+            {
+                id: 4,
+                title: "Speed & Fly Hack",
+                description: "Adjustable walk speed and fly. Works with anti-cheat bypass on most games.",
+                tags: ["Utility", "Fun"],
+                status: "new",
+                code: `-- Speed & Fly Script by Vortex Hub
+
+local Player = game.Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+-- Speed Hack
+local speedEnabled = false
+local speedValue = 50
+
+-- Fly Hack
+local flyEnabled = false
+local flySpeed = 50
+
+local function toggleSpeed()
+    speedEnabled = not speedEnabled
+    if speedEnabled then
+        Humanoid.WalkSpeed = speedValue
+        print("[Vortex] Speed enabled: " .. speedValue)
+    else
+        Humanoid.WalkSpeed = 16
+        print("[Vortex] Speed disabled")
+    end
+end
+
+local function toggleFly()
+    flyEnabled = not flyEnabled
+    -- Fly implementation here
+    print("[Vortex] Fly " .. (flyEnabled and "enabled" or "disabled"))
+end
+
+-- Keybinds: F for fly, G for speed
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F then toggleFly() end
+    if input.KeyCode == Enum.KeyCode.G then toggleSpeed() end
+end)
+
+print("[Vortex Hub] Speed & Fly Loaded! Press F=Fly, G=Speed")`
+            },
+            {
+                id: 5,
+                title: "Da Hood Aimlock",
+                description: "Powerful aimlock specifically designed for Da Hood. Includes prediction and smoothing.",
+                tags: ["Aimbot"],
+                status: "hot",
+                code: `-- Da Hood Aimlock by Vortex Hub
+-- Optimized for Da Hood
+
+local Settings = {
+    Enabled = true,
+    Key = Enum.KeyCode.Q,
+    Prediction = 0.165,
+    TargetPart = "HumanoidRootPart",
+    Smoothness = 0.1
+}
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local Target = nil
+local Locked = false
+
+function GetClosest()
+    local closest = nil
+    local shortestDistance = math.huge
+    
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local pos = Camera:WorldToScreenPoint(player.Character[Settings.TargetPart].Position)
+            local distance = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
+            if distance < shortestDistance then
+                closest = player
+                shortestDistance = distance
+            end
+        end
+    end
+    return closest
+end
+
+print("[Vortex Hub] Da Hood Aimlock Loaded! Press Q to lock")`
+            },
+            {
+                id: 6,
+                title: "Blox Fruits Auto Farm",
+                description: "Fully automated farming for Blox Fruits. Level up while AFK!",
+                tags: ["Utility"],
+                status: "new",
+                code: `-- Blox Fruits Auto Farm by Vortex Hub
+-- AFK Level Up Script
+
+local AutoFarm = {
+    Enabled = false,
+    SelectedQuest = nil,
+    AutoSkill = true
+}
+
+function AutoFarm:Start()
+    self.Enabled = true
+    spawn(function()
+        while self.Enabled do
+            -- Get nearest quest
+            -- Accept quest
+            -- Farm mobs
+            -- Return to NPC
+            wait(0.1)
+        end
+    end)
+    print("[Vortex Hub] Auto Farm Started!")
+end
+
+function AutoFarm:Stop()
+    self.Enabled = false
+    print("[Vortex Hub] Auto Farm Stopped!")
+end
+
+-- Simple GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.CoreGui
+
+print("[Vortex Hub] Blox Fruits Auto Farm Loaded!")
+print("Press F9 to open console for commands")`
+            },
+            {
+                id: 7,
+                title: "99 Nights – All Features (God Mode)",
+                description: "Full-featured 99 Nights script with God Mode and advanced gameplay enhancements.",
+                tags: ["Roblox", "99 Nights", "God Mode", "Exploit"],
+                status: "new",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/wehibuyfgyuwe/99nights.github.io/refs/heads/main/ringta.lua"))()`
+            },
+            {
+                id: 8,
+                title: "Blox Fruits - Hoho Hub",
+                description: "Best Blox Fruits script with Auto Farm, Auto Raid, Devil Fruit Sniper, Teleports & more. Keyless!",
+                tags: ["Utility", "Fun"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"))();`
+            },
+            {
+                id: 9,
+                title: "Pet Simulator X - Auto Farm",
+                description: "Auto hatch eggs, auto farm coins, auto collect rewards. Works with all areas!",
+                tags: ["Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Pet-Simulator-X-Pet-Sim-X-Titanics-Farm-Script-22378"))();`
+            },
+            {
+                id: 10,
+                title: "Murder Mystery 2 - GUI",
+                description: "ESP, God Mode, Coin Farm, Player Tracker, Sheriff/Murderer reveal & more!",
+                tags: ["ESP", "Utility", "Fun"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/Debug255/Unnamed-Hub-V2/main/Games/MM2.lua"))();`
+            },
+            {
+                id: 11,
+                title: "Jailbreak - Keyless Script",
+                description: "Auto rob, ESP, Noclip, Infinite Nitro, Teleports to all locations. No key needed!",
+                tags: ["ESP", "Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/jfrfrfr/lol/main/V2%26Rc7%20works"))();`
+            },
+            {
+                id: 12,
+                title: "Arsenal - Silent Aim & ESP",
+                description: "Dominate Arsenal with Silent Aim, ESP, Kill All, Aimbot & more features!",
+                tags: ["Aimbot", "ESP"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeeppay/Undetected-Silent-Aim/main/Undetected%20Silent%20Aim%20.lua"))();`
+            },
+            {
+                id: 13,
+                title: "King Legacy - Auto Farm Hub",
+                description: "Auto farm, auto quest, fruit sniper, teleports, stats distribution & more!",
+                tags: ["Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"))();`
+            },
+            {
+                id: 14,
+                title: "Brookhaven RP - Trolling GUI",
+                description: "Admin commands, fly, speed, noclip, trolling features, house TP & more!",
+                tags: ["Admin", "Fun"],
+                status: "new",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Brook%20Haven"))();`
+            },
+            {
+                id: 15,
+                title: "Tower of Hell - Auto Win",
+                description: "Instant finish, fly, noclip, stage skip, god mode. Beat every tower easily!",
+                tags: ["Utility", "Fun"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://pastebin.com/raw/aN2PCXFK"))();`
+            },
+            {
+                id: 16,
+                title: "Shindo Life - Full Hub",
+                description: "Auto farm, infinite spins, boss farm, auto quest, bloodline mods & more!",
+                tags: ["Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/NewLuaGamer/ExploitXD/main/Blaze"))();`
+            },
+            {
+                id: 17,
+                title: "YBA - Your Bizarre Adventure",
+                description: "Auto farm, item ESP, stand storage, quest helper, Paragon farm & more!",
+                tags: ["ESP", "Utility"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://pastefy.app/XvbzDVKY/raw"))();`
+            },
+            {
+                id: 18,
+                title: "Anime Fighters Simulator",
+                description: "Auto farm, secret farm, auto hatch, time trial, teleports & star farm!",
+                tags: ["Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Anime-Fighters-Simulator-LcLc-Hub-V2-Fixed-13254"))();`
+            },
+            {
+                id: 19,
+                title: "All Star Tower Defense",
+                description: "Auto farm, infinite gems, auto place units, auto upgrade & more features!",
+                tags: ["Utility"],
+                status: "new",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/ASTD/main/source.lua"))();`
+            },
+            {
+                id: 20,
+                title: "Phantom Forces - Aimbot",
+                description: "Silent aim, ESP, no recoil, wallbang, radar hack & instant reload!",
+                tags: ["Aimbot", "ESP"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeeppay/Undetected-Silent-Aim/main/Undetected%20Silent%20Aim%20.lua"))();`
+            },
+            {
+                id: 21,
+                title: "Doors - Entity ESP & Helper",
+                description: "See all entities, auto hide, item ESP, God mode, walkspeed & more!",
+                tags: ["ESP", "Utility"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynworker/RandomStuff/main/Doors"))();`
+            },
+            {
+                id: 22,
+                title: "Flee The Facility - God Mode",
+                description: "God mode, speed hack, noclip, ESP for beast/survivors, instant escape!",
+                tags: ["ESP", "Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Flee-the-Facility-God-Script-21631"))();`
+            },
+            {
+                id: 23,
+                title: "Breaking Point - Kill All",
+                description: "Always win, kill all, teleports, ESP, god mode. Dominate the game!",
+                tags: ["Utility", "Fun"],
+                status: "new",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Breaking-Point-Auto-Kill-all-5873"))();`
+            },
+            {
+                id: 24,
+                title: "Grand Piece Online - Hub",
+                description: "Auto farm, fruit ESP, boss farm, auto quest, devil fruit notifier & more!",
+                tags: ["ESP", "Utility"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"))();`
+            },
+            {
+                id: 25,
+                title: "Ro-Ghoul - Auto Farm Script",
+                description: "Auto farm RC/Yen, auto trainer, kagune/quinque mods, teleports & more!",
+                tags: ["Utility"],
+                status: "verified",
+                code: `loadstring(game:HttpGet("https://pastebin.com/raw/9pjy2yTP"))();`
+            },
+            {
+                id: 26,
+                title: "Bedwars - Kill Aura & ESP",
+                description: "Kill aura, reach, ESP, fly, speed, auto-bridge & bed destroyer!",
+                tags: ["Aimbot", "ESP"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapesV4ForRoblox/main/NewMainScript.lua"))();`
+            },
+            {
+                id: 27,
+                title: "Adopt Me - Auto Farm Bucks",
+                description: "Auto farm bucks, auto pet age, teleports, speed & more! Works 2024!",
+                tags: ["Utility", "Fun"],
+                status: "new",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Adopt-Me-Auto-Farm-18648"))();`
+            },
+            {
+                id: 28,
+                title: "Blade Ball - Auto Parry",
+                description: "Perfect auto parry timing, ESP, speed boost & never miss a parry!",
+                tags: ["Utility"],
+                status: "hot",
+                code: `loadstring(game:HttpGet("https://rawscripts.net/raw/Blade-Ball-Auto-parry-and-auto-spam-23714"))();`
+            }
+        ];
+
+        // Admin password (for demo purposes)
+        const ADMIN_PASSWORD = "vortex2024";
+
+        // Initialize
+        let scripts = JSON.parse(localStorage.getItem('vortexScripts')) || defaultScripts;
+        let currentScript = null;
+        let isAdmin = false;
+
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Render scripts
+        function renderScripts(filter = 'all', search = '') {
+            const grid = document.getElementById('scriptsGrid');
+            grid.innerHTML = '';
+
+            const filteredScripts = scripts.filter(script => {
+                const matchesTag = filter === 'all' || script.tags.includes(filter);
+                const matchesSearch = script.title.toLowerCase().includes(search.toLowerCase()) ||
+                                     script.description.toLowerCase().includes(search.toLowerCase());
+                return matchesTag && matchesSearch;
+            });
+
+            if (filteredScripts.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1; padding: 4rem;">No scripts found matching your criteria.</p>';
+                return;
+            }
+
+            filteredScripts.forEach(script => {
+                const card = document.createElement('div');
+                card.className = 'script-card';
+                card.onclick = () => openModal(script);
+                
+                const badgeClass = script.status === 'new' ? 'badge-new' : 
+                                  script.status === 'hot' ? 'badge-hot' : 'badge-verified';
+                
+                card.innerHTML = `
+                    <div class="script-header">
+                        <h3 class="script-title">${script.title}</h3>
+                        <span class="script-badge ${badgeClass}">${script.status.toUpperCase()}</span>
+                    </div>
+                    <p class="script-desc">${script.description}</p>
+                    <div class="script-tags">
+                        ${script.tags.map(tag => `<span class="script-tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Modal functions
+        function openModal(script) {
+            currentScript = script;
+            document.getElementById('modalTitle').textContent = script.title;
+            document.getElementById('modalCode').textContent = script.code;
+            document.getElementById('scriptModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('scriptModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function copyScript() {
+            navigator.clipboard.writeText(currentScript.code).then(() => {
+                showToast('✓ Copied to clipboard!');
+            });
+        }
+
+        function downloadScript() {
+            const blob = new Blob([currentScript.code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentScript.title.replace(/\s+/g, '_')}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('⬇️ Download started!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 3000);
+        }
+
+        // Admin functions
+        function showAdminGate() {
+            document.getElementById('admin').classList.add('active');
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            document.querySelector('.scripts-section').style.display = 'none';
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdmin = true;
+                document.getElementById('passwordGate').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                renderAdminScripts();
+                showToast('🔓 Admin access granted!');
+            } else {
+                showToast('❌ Invalid password!');
+            }
+        }
+
+        function uploadScript() {
+            const title = document.getElementById('scriptTitle').value;
+            const desc = document.getElementById('scriptDesc').value;
+            const code = document.getElementById('scriptCode').value;
+            const status = document.getElementById('scriptStatus').value;
+            const tags = Array.from(document.querySelectorAll('.checkbox-group input:checked')).map(cb => cb.value);
+
+            if (!title || !desc || !code) {
+                showToast('❌ Please fill all fields!');
+                return;
+            }
+
+            const newScript = {
+                id: Date.now(),
+                title,
+                description: desc,
+                tags,
+                status,
+                code
+            };
+
+            scripts.push(newScript);
+            localStorage.setItem('vortexScripts', JSON.stringify(scripts));
+            
+            // Clear form
+            document.getElementById('scriptTitle').value = '';
+            document.getElementById('scriptDesc').value = '';
+            document.getElementById('scriptCode').value = '';
+            document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
+            
+            renderAdminScripts();
+            showToast('✓ Script uploaded successfully!');
+        }
+
+        function renderAdminScripts() {
+            const container = document.getElementById('adminScriptsList');
+            container.innerHTML = '<h3 style="margin-bottom: 1rem; margin-top: 2rem;">Manage Scripts</h3>';
+            
+            scripts.forEach(script => {
+                const item = document.createElement('div');
+                item.className = 'admin-script-item';
+                item.innerHTML = `
+                    <span>${script.title}</span>
+                    <button onclick="deleteScript(${script.id})">Delete</button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function deleteScript(id) {
+            scripts = scripts.filter(s => s.id !== id);
+            localStorage.setItem('vortexScripts', JSON.stringify(scripts));
+            renderAdminScripts();
+            renderScripts();
+            showToast('🗑️ Script deleted!');
+        }
+
+        // Navigation
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const activeTag = document.querySelector('.tag-btn.active').dataset.tag;
+            renderScripts(activeTag, e.target.value);
+        });
+
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderScripts(btn.dataset.tag, document.getElementById('searchInput').value);
+            });
+        });
+
+        // Close modal on overlay click
+        document.getElementById('scriptModal').addEventListener('click', (e) => {
+            if (e.target.id === 'scriptModal') closeModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#admin') return;
+                
+                e.preventDefault();
+                document.getElementById('admin').classList.remove('active');
+                document.getElementById('home').style.display = '';
+                document.getElementById('features').style.display = '';
+                document.querySelector('.scripts-section').style.display = '';
+                
+                const target = document.querySelector(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // Initialize
+        createParticles();
+        renderScripts();
+    </script>
+</body>
+</html>
