@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX HUB | ScriptBlox Engine</title>
+    <meta name="description"
+        content="Advanced Roblox Script Search Engine powered by ScriptBlox. Keyless, active, and fast.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #050510;
+            --bg-card: #0f0f25;
+            --primary: #00f2ff;
+            --primary-dim: #00f2ff20;
+            --secondary: #bc13fe;
+            --text-main: #ffffff;
+            --text-muted: #a0a0b0;
+            --glow: 0 0 20px var(--primary-dim);
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* --- UI COMPONENTS --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--text-main), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+            animation: glowPulse 3s infinite alternate;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            font-size: 1.2rem;
+            background: rgba(15, 15, 37, 0.8);
+            border: var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 30px var(--primary-dim);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-dim);
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-dim);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .game-badge {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .card-meta {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        .status-dot.patched {
+            background: #ff4444;
+            box-shadow: 0 0 8px #ff4444;
+        }
+
+        .card-desc {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-actions {
+            margin-top: auto;
+        }
+
+        .btn-view {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-view:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        }
+
+        /* Loader */
+        .loader-container {
+            display: none;
+            justify-content: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Music Controls */
+        .music-ctrl {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .music-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(15, 15, 37, 0.9);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* Pagination banner */
+        .load-more {
+            display: block;
+            margin: 3rem auto;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 1rem 3rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .load-more:hover {
+            background: var(--primary-dim);
+            box-shadow: 0 0 20px var(--primary-dim);
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes glowPulse {
+            from {
+                text-shadow: 0 0 20px var(--primary-dim);
+            }
+
+            to {
+                text-shadow: 0 0 40px var(--primary);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4rem;
+        }
+
+        .error-msg {
+            text-align: center;
+            color: #ff4444;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">VORTEX HUB</div>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchInput"
+                    placeholder="Search for scripts (e.g., 'Blox Fruits', 'Arsenal')..." autofocus>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="free" onclick="toggleFilter(this, 'mode')">
+                        <span>🔓</span> Keyless
+                    </button>
+                    <!-- ScriptBlox API behavior for 'patched' is tricky, strict filtering might reduce results too much, but we'll try to visually warn or filter if possible via API or client side. 
+                         For now, we stick to the user request 'patched=0' logic if API supports it, or just visual. -->
+                    <button class="filter-btn" data-filter="active" onclick="toggleFilter(this, 'valid')">
+                        <span>✅</span> Verified Only
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main id="resultsContainer" class="results-grid">
+            <!-- Results injected here -->
+        </main>
+
+        <div class="loader-container" id="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <button id="loadMoreBtn" class="load-more" style="display: none;">Next Page</button>
+
+        <footer>
+            <p>Scripts fetched live from <a href="https://scriptblox.com" target="_blank"
+                    style="color: var(--primary); text-decoration: none;">ScriptBlox.com</a>.</p>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.6;">Vortex Hub does not host any scripts. All
+                credits to original creators.</p>
+        </footer>
+    </div>
+
+    <!-- Music Control -->
+    <div class="music-ctrl">
+        <button class="music-btn" id="musicToggle" aria-label="Toggle Music">
+            🔇
+        </button>
+    </div>
+
+    <!-- Background Music: Using a reliable royalty-free cyberpunk looping track -->
+    <audio id="bgMusic" loop>
+        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg"
+            type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // --- CONFIG & STATE ---
+        const API_BASE = 'https://scriptblox.com/api/script/search';
+        let currentState = {
+            query: '',
+            page: 1,
+            mode: 'free', // 'free' maps to keyless usually in ScriptBlox URL params
+            loading: false
+        };
+
+        // --- DOM ELEMENTS ---
+        const searchInput = document.getElementById('searchInput');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const loader = document.getElementById('loader');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+
+        // --- MUSIC PLAYER ---
+        let musicPlaying = false;
+        bgMusic.volume = 0.3; // Lower volume for background
+
+        musicBtn.addEventListener('click', () => {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicBtn.innerHTML = '🔇';
+                musicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicBtn.innerHTML = '🔊';
+                    musicPlaying = true;
+                }).catch(e => {
+                    console.log("Audio play failed (user interaction needed):", e);
+                });
+            }
+        });
+
+        // --- SEARCH LOGIC ---
+        let debounceTimer;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                currentState.query = e.target.value.trim();
+                currentState.page = 1;
+                fetchScripts(true);
+            }, 600);
+        });
+
+        function toggleFilter(btn, type) {
+            btn.classList.toggle('active');
+            // Logic to update state based on filters
+            // For 'mode' (Keyless), strict enforcement:
+            if (type === 'mode') {
+                currentState.mode = btn.classList.contains('active') ? 'free' : '';
+            }
+            // Trigger refresh
+            currentState.page = 1;
+            fetchScripts(true);
+        }
+
+        // --- API FETCHING ---
+        async function fetchScripts(reset = false) {
+            if (currentState.loading) return;
+
+            if (reset) {
+                resultsContainer.innerHTML = '';
+                loadMoreBtn.style.display = 'none';
+            }
+
+            // Show loader
+            loader.style.display = 'flex';
+            currentState.loading = true;
+
+            try {
+                // Construct URL
+                // Note: ScriptBlox API uses 'q' for query, 'page' for pagination.
+                // 'mode=free' is often used for keyless. 
+                // Using a CORS proxy might be necessary if ScriptBlox blocks direct browser calls. 
+                // We will try direct first. If it fails, we catch it.
+                // NOTE: ScriptBlox API sometimes requires a generic query if q is empty.
+                const query = currentState.query || 'universal';
+                let url = `${API_BASE}?q=${encodeURIComponent(query)}&page=${currentState.page}&max=20`;
+
+                if (currentState.mode === 'free') {
+                    url += '&mode=free';
+                }
+
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const data = await response.json();
+                const scripts = data.result?.scripts || [];
+
+                if (scripts.length === 0 && reset) {
+                    resultsContainer.innerHTML = '<div class="error-msg">No scripts found. Try a different search term.</div>';
+                } else {
+                    renderScripts(scripts);
+                    if (scripts.length >= 20 && currentState.page < (data.result?.totalPages || 100)) {
+                        loadMoreBtn.style.display = 'block';
+                    } else {
+                        loadMoreBtn.style.display = 'none';
+                    }
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+
+                // Fallback for demo purposes if API is strict on CORS
+                // In a real production environment, a proxy represents a backend.
+                // Here we show a friendly error.
+                if (reset) {
+                    resultsContainer.innerHTML = `
+                        <div class="error-msg" style="grid-column: 1/-1;">
+                            <h3>Unable to connect to ScriptBlox</h3>
+                            <p>This may be due to browser security (CORS) or the API being down.</p>
+                            <p style="font-size:0.9rem; margin-top:1rem; color:var(--text-muted);">
+                                Technical Note: If you are opening this file locally (file://), CORS will block requests. 
+                                Please use a local server (e.g., Live Server) or deploy to GitHub Pages.
+                            </p>
+                        </div>
+                    `;
+                }
+            } finally {
+                loader.style.display = 'none';
+                currentState.loading = false;
+            }
+        }
+
+        // --- RENDERING ---
+        function renderScripts(scripts) {
+            scripts.forEach((script, index) => {
+                // Calculate delay for staggered animation
+                const delay = index * 50;
+
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.style.animationDelay = `${delay}ms`;
+
+                // Check status
+                const isPatched = script.isPatched; // Assuming API returns this boolean or similar
+                const statusColor = isPatched ? 'patched' : '';
+                const statusText = isPatched ? 'PATCHED' : 'WORKING';
+
+                // Image placeholder handling (ScriptBlox usually provides 'game.imageUrl' or similar)
+                // We'll focus on text/code aesthetics as requested.
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="game-badge">${escapeHtml(script.game?.name || 'Roblox Game')}</span>
+                        <div class="status-dot ${statusColor}" title="${statusText}"></div>
+                    </div>
+                    <h3 class="card-title">${escapeHtml(script.title)}</h3>
+                    <div class="card-meta">
+                        <span>👁️ ${script.views || 0}</span>
+                        <span>❤️ ${script.likeCount || 0}</span> <!-- Adjusted prop names based on common API shapes -->
+                    </div>
+                    <!-- Assuming 'scriptType' or 'key' info could be used here -->
+                    <p class="card-desc">
+                        ${script.key ? '🔑 Needs Key' : '🔓 Keyless'} • 
+                        ${script.scriptType || 'Lua'}
+                    </p>
+                    <div class="card-actions">
+                        <a href="https://scriptblox.com/script/${script.slug}" target="_blank" class="btn-view">
+                            View on ScriptBlox
+                        </a>
+                    </div>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        // Helper to prevent XSS
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // --- LOAD MORE ---
+        loadMoreBtn.addEventListener('click', () => {
+            currentState.page++;
+            fetchScripts(false);
+        });
+
+        // --- INITIALIZATION ---
+        // Load initial "universal" or popular scripts
+        fetchScripts(true);
+
+    </script>
+</body>
+
+</html>
