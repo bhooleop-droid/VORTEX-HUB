@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX HUB | ScriptBlox Engine</title>
+    <meta name="description"
+        content="Advanced Roblox Script Search Engine powered by ScriptBlox. Keyless, active, and fast.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #050510;
+            --bg-card: #0f0f25;
+            --bg-modal: #12122a;
+            --primary: #00f2ff;
+            --primary-dim: rgba(0, 242, 255, 0.15);
+            --secondary: #bc13fe;
+            --secondary-dim: rgba(188, 19, 254, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #a0a0b0;
+            --border: 1px solid rgba(255, 255, 255, 0.1);
+            --code-bg: #0a0a18;
+            --transition: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(188, 19, 254, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 242, 255, 0.08) 0%, transparent 40%);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 10px var(--primary-dim);
+            }
+
+            50% {
+                box-shadow: 0 0 25px var(--primary-dim);
+            }
+
+            100% {
+                box-shadow: 0 0 10px var(--primary-dim);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0 3rem;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .sub-logo {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-dim);
+            color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-dim);
+        }
+
+        .nav-tab:hover:not(.active) {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Views --- */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* --- Search Area --- */
+        .search-area {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: rgba(15, 15, 37, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 1.2rem 2rem;
+            padding-right: 3.5rem;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s var(--transition);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* --- Grid --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- Script Card --- */
+        .card {
+            background: var(--bg-card);
+            border: var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.6s ease forwards;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-img-wrap {
+            height: 160px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+            opacity: 0.8;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+            z-index: 2;
+        }
+
+        .card-game-title {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: #fff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .script-stats {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .script-key-status {
+            color: #ffaa00;
+        }
+
+        .script-key-status.free {
+            color: #00ff88;
+        }
+
+        .btn-details {
+            margin-top: auto;
+            width: 100%;
+            padding: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-details:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-dim);
+        }
+
+        /* --- Executor Cards --- */
+        .exec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .exec-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exec-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(188, 19, 254, 0.2);
+        }
+
+        .exec-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .exec-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .exec-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .exec-btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(90deg, var(--secondary), #d946ef);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .exec-btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        }
+
+        /* --- Modal --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--bg-modal);
+            width: 90%;
+            max-width: 900px;
+            height: 85vh;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-title-wrap h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .btn-close:hover {
+            color: #fff;
+        }
+
+        .modal-content {
+            padding: 2rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .code-block-container {
+            background: var(--code-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+
+        .code-header {
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #d4d4d4;
+            max-height: 400px;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action.download {
+            background: var(--primary-dim);
+            color: var(--primary);
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.2);
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 4rem auto;
+            display: none;
+        }
+
+        .load-more {
+            display: block;
+            margin: 2rem auto 4rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .load-more:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* --- Audio --- */
+        .music-ctrl {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(15, 15, 37, 0.8);
+            border: 1px solid var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 90;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .music-ctrl:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .search-bar {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo" onclick="switchTab('scripts')">VORTEX HUB</div>
+            <div class="sub-logo">ADVANCED SCRIPT & EXECUTOR ENGINE</div>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="switchTab('scripts')">📜 SCRIPTS</div>
+                <div class="nav-tab" onclick="switchTab('executors')">⚙️ EXECUTORS</div>
+            </div>
+        </header>
+
+        <!-- Scripts View -->
+        <section id="scriptsView" class="view-section active">
+            <div class="search-area">
+                <div class="search-wrapper">
+                    <input type="text" class="search-bar" id="searchInput"
+                        placeholder="Search for scripts (e.g. Blox Fruits)..." autofocus>
+                    <div class="search-icon">🔍</div>
+                </div>
+                <div style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                    💡 Showing All Scripts (Key & Keyless)
+                </div>
+            </div>
+
+            <div id="resultsGrid" class="results-grid">
+                <!-- Scripts injected here -->
+            </div>
+
+            <div id="loader" class="loader"></div>
+            <button id="loadMore" class="load-more" style="display: none;">Load More Scripts</button>
+        </section>
+
+        <!-- Executors View -->
+        <section id="executorsView" class="view-section">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Executors Hub</h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                    Download the best Roblox executors for PC and Mobile.
+                    <br><span style="color: #ff4444; font-size: 0.85rem;">⚠️ Use at your own risk. We do not host these
+                        files.</span>
+                </p>
+            </div>
+
+            <div class="exec-grid" id="execGrid">
+                <!-- Executors injected by JS -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <h2 id="mTitle">Script Title</h2>
+                    <div style="display: flex; gap: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                        <span id="mGame">Game Name</span>
+                        <span style="color: var(--primary)">•</span>
+                        <span id="mViews">0 Views</span>
+                    </div>
+                </div>
+                <button class="btn-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content">
+                <div id="mDesc" style="color: #d1d1d1; margin-bottom: 1.5rem; line-height: 1.6; white-space: pre-wrap;">
+                </div>
+
+                <div class="code-block-container">
+                    <div class="code-header">
+                        <span
+                            style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-muted);">LUA
+                            SCRIPT</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-action" onclick="copyScript()">📋 Copy</button>
+                            <button class="btn-action download" onclick="downloadScript()">💾 Download</button>
+                        </div>
+                    </div>
+                    <pre><code id="mCode">-- Loading...</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music -->
+    <div class="music-ctrl" id="musicToggle" title="Toggle Music">🔇</div>
+    <audio id="bgMusic" loop>
+        <source src="https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg"
+            type="audio/ogg">
+    </audio>
+
+    <script>
+        // --- State ---
+        const state = {
+            query: '',
+            page: 1,
+            isLoading: false,
+            currentScript: null
+        };
+
+        const executors = [
+            { name: "Delta Executor", icon: "🔺", tag: "Mobile / PC", url: "https://delta-team.net/" },
+            { name: "Solara", icon: "☀️", tag: "Windows PC", url: "https://getsolara.dev/" },
+            { name: "Xeno", icon: "⚔️", tag: "Windows PC", url: "https://getxeno.net/" },
+            { name: "Hydrogen", icon: "💧", tag: "Android / Mac", url: "https://hydrogenexecutor.net/" },
+            { name: "Fluxus", icon: "🌌", tag: "Mobile / PC", url: "https://fluxus.mobi/" },
+            { name: "Codex", icon: "📜", tag: "Android / iOS", url: "https://codex.lol/" }
+        ];
+
+        const DOM = {
+            input: document.getElementById('searchInput'),
+            grid: document.getElementById('resultsGrid'),
+            execGrid: document.getElementById('execGrid'),
+            loader: document.getElementById('loader'),
+            loadMore: document.getElementById('loadMore'),
+            modal: document.getElementById('modalOverlay'),
+            music: { btn: document.getElementById('musicToggle'), audio: document.getElementById('bgMusic') },
+            // Modal Elements
+            mTitle: document.getElementById('mTitle'),
+            mGame: document.getElementById('mGame'),
+            mViews: document.getElementById('mViews'),
+            mDesc: document.getElementById('mDesc'),
+            mCode: document.getElementById('mCode')
+        };
+
+        // --- Init ---
+        let debounceTimer;
+        DOM.input.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                state.query = e.target.value.trim();
+                resetSearch();
+            }, 600);
+        });
+
+        DOM.loadMore.addEventListener('click', () => {
+            state.page++;
+            fetchScripts();
+        });
+
+        window.addEventListener('load', () => {
+            state.query = '';
+            fetchScripts();
+            renderExecutors();
+        });
+
+        // --- Tabs ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+
+            if (tabName === 'scripts') {
+                document.getElementById('scriptsView').classList.add('active');
+                document.querySelectorAll('.nav-tab')[0].classList.add('active');
+            } else {
+                document.getElementById('executorsView').classList.add('active');
+                document.querySelectorAll('.nav-tab')[1].classList.add('active');
+            }
+        }
+
+        // --- Executors Logic ---
+        function renderExecutors() {
+            DOM.execGrid.innerHTML = executors.map(exec => `
+                <div class="exec-card">
+                    <div class="exec-icon">${exec.icon}</div>
+                    <div class="exec-title">${exec.name}</div>
+                    <div class="exec-tag">${exec.tag}</div>
+                    <a href="${exec.url}" target="_blank" class="exec-btn">Download / Visit</a>
+                </div>
+            `).join('');
+        }
+
+        // --- Script Search Logic ---
+        function resetSearch() {
+            state.page = 1;
+            DOM.grid.innerHTML = '';
+            DOM.loadMore.style.display = 'none';
+            fetchScripts();
+        }
+
+        async function fetchScripts() {
+            if (state.isLoading) return;
+            state.isLoading = true;
+            DOM.loader.style.display = 'block';
+
+            try {
+                // REMOVED 'mode=free' to show all scripts per request
+                const q = state.query || 'universal';
+                const url = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(q)}&page=${state.page}&max=16`;
+
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('API Error');
+
+                const data = await res.json();
+                const scripts = data.result?.scripts || [];
+
+                if (scripts.length === 0 && state.page === 1) {
+                    DOM.grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">No scripts found.</div>';
+                } else {
+                    renderCards(scripts);
+                    if (scripts.length >= 16 && state.page < (data.result?.totalPages || 50)) {
+                        DOM.loadMore.style.display = 'block';
+                    } else {
+                        DOM.loadMore.style.display = 'none';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                if (state.page === 1) {
+                    DOM.grid.innerHTML = `<div style="text-align:center; padding:2rem; grid-column:1/-1;">Error fetching scripts. Check console/CORS.</div>`;
+                }
+            } finally {
+                state.isLoading = false;
+                DOM.loader.style.display = 'none';
+            }
+        }
+
+        function renderCards(scripts) {
+            scripts.forEach((script, idx) => {
+                if (script.isPatched) return; // Still hiding patched as per original rules unless user says otherwise.
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = `${idx * 50}ms`;
+
+                const imgUrl = script.game?.imageUrl
+                    ? `https://scriptblox.com${script.game.imageUrl}`
+                    : 'https://via.placeholder.com/400x200/0f0f25/00f2ff?text=Roblox+Script';
+
+                // Visual Indicator for Key/Keyless
+                const keyStatus = script.key ? '<span class="script-key-status">🔑 Key System</span>' : '<span class="script-key-status free">🔓 Keyless</span>';
+
+                card.innerHTML = `
+                    <div class="card-img-wrap">
+                        <img src="${imgUrl}" alt="${escapeHtml(script.game?.name)}" class="card-img" onerror="this.src='https://via.placeholder.com/400x200/0f0f25/bc13fe?text=Game'">
+                        <div class="card-overlay">
+                            <div class="card-game-title">${escapeHtml(script.game?.name || 'Game')}</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${escapeHtml(script.title)}</h3>
+                        <div class="card-meta">
+                            <span class="meta-item">👁️ ${formatNumber(script.views)}</span>
+                            <span class="script-stats">${keyStatus}</span>
+                        </div>
+                        <button class="btn-details">VIEW SCRIPT</button>
+                    </div>
+                `;
+
+                card.querySelector('.btn-details').addEventListener('click', () => openScriptModal(script));
+                DOM.grid.appendChild(card);
+            });
+        }
+
+        async function openScriptModal(scriptData) {
+            DOM.mTitle.innerText = scriptData.title;
+            DOM.mGame.innerText = scriptData.game?.name || 'Roblox';
+            DOM.mViews.innerText = `${formatNumber(scriptData.views)} Views`;
+            DOM.mDesc.innerText = 'Loading details...';
+            DOM.mCode.innerText = '-- Fetching source...';
+            DOM.modal.classList.add('active');
+            state.currentScript = scriptData;
+
+            try {
+                const res = await fetch(`https://scriptblox.com/api/script/${scriptData.slug}`);
+                if (!res.ok) throw new Error("Failed to load details");
+                const details = await res.json();
+                const fullScript = details.script?.script || "-- Script code not found.";
+
+                DOM.mDesc.innerText = scriptData.features || "No description provided.";
+                DOM.mCode.innerText = fullScript;
+                state.currentScript.fullCode = fullScript;
+            } catch (err) {
+                DOM.mCode.innerText = "-- Error fetching code.";
+            }
+        }
+
+        function closeModal() {
+            DOM.modal.classList.remove('active');
+            state.currentScript = null;
+        }
+
+        function copyScript() {
+            const code = state.currentScript?.fullCode || '';
+            if (!code) return;
+            navigator.clipboard.writeText(code);
+        }
+
+        function downloadScript() {
+            const code = state.currentScript?.fullCode || '';
+            if (!code) return;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${state.currentScript.slug || 'script'}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function formatNumber(num) {
+            return num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        // Music
+        let isMusicPlaying = false;
+        DOM.music.audio.volume = 0.2;
+        DOM.music.btn.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                DOM.music.audio.pause();
+                DOM.music.btn.innerText = '🔇';
+                isMusicPlaying = false;
+            } else {
+                DOM.music.audio.play().then(() => {
+                    DOM.music.btn.innerText = '🔊';
+                    isMusicPlaying = true;
+                });
+            }
+        });
+
+        DOM.modal.addEventListener('click', (e) => {
+            if (e.target === DOM.modal) closeModal();
+        });
+    </script>
+</body>
+
+</html>
